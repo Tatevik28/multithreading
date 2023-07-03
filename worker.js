@@ -10,6 +10,7 @@ function convertCSVToJSON(csvPath) {
     return new Promise((resolve, reject) => {
         console.log(csvPath)
         fs.createReadStream(csvPath)
+            .pipe(csvParser())
             .on('data', (data) => {
                 console.log(data, 'data')
                 results.push(data.toString())

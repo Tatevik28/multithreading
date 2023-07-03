@@ -1,8 +1,7 @@
-
-import {Worker, isMainThread, parentPort, workerData} from 'worker_threads';
+import {isMainThread, Worker} from 'worker_threads';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,7 +23,7 @@ if (!fs.existsSync(convertedDirectory)) {
     fs.mkdirSync(convertedDirectory);
 }
 
-function distributeTasks(csvFiles) {
+function sortTasks(csvFiles) {
     const threadsCount = Math.min(csvFiles.length, os.cpus().length);
     const filesPerThread = Math.ceil(csvFiles.length / threadsCount);
 
@@ -40,8 +39,8 @@ function distributeTasks(csvFiles) {
             if (workersCount === threadsCount) {
                 const endTime = new Date().getTime();
                 const duration = endTime - startTime;
-                console.log('Overall count:', processedCount);
-                console.log('Parsing duration (ms):', duration);
+                console.log('Count', processedCount);
+                console.log('Duration', duration);
                 process.exit(0);
             }
         });
@@ -63,13 +62,12 @@ if (isMainThread) {
         .map((file) => path.join(csvDirectory, file));
 
     workerScript = new URL('./worker.js', import.meta.url).pathname;
-    console.log(workerScript)
 
     startTime = new Date().getTime();
 
     processedCount = 0;
     workersCount = 0;
 
-    distributeTasks(csvFiles);
+    sortTasks(csvFiles);
 }
 
