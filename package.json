@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/node": "^20.2.5",
+    "cluster": "^0.7.7",
+    "csv-parser": "^3.0.0"
+  },
+  "type": "module"
+}
